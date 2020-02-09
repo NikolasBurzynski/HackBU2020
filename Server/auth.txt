@@ -1,4 +1,2 @@
-000001,password1
-000002,password2
-000003,password3
-000004,nMG
+000001,Lizzo
+000002,Lizzo
