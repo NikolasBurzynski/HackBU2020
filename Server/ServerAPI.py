@@ -1,7 +1,7 @@
 import ServerSockets
 
-def didPass():
-    return True
+#def didPass():
+#    return "Allow"
 
 def auth(packet):
     #print(packet)
@@ -29,11 +29,11 @@ def auth(packet):
         #print(x)
         if(inputUserID == allIds[x] and inputPassword == allPwds[x]):
             print("Authentification Complete")
-            didPass()
-            postAuthParse(outPutPacket, inputUserID)
+            return postAuthParse(outPutPacket, inputUserID)
             break
         else:
             print("Invalid userID and/or userPWD")
+            return "Deny"
 
 
 def postAuthParse(packet, UserID):
@@ -47,7 +47,7 @@ def postAuthParse(packet, UserID):
     profileInfo = open("profileInfo.txt", "r+")
     profInfo = profileInfo.read().split("\n")
     #print(profInfo)
-    if(function == "set"):
+    if(function == "set" and argument == "Single" or argument == "Taken" or argument == "Not Looking"):
         for x in range(0,len(profInfo)):
             splitInfo = profInfo[x].split(",")
             if(splitInfo[0] == UserID):
@@ -63,13 +63,20 @@ def postAuthParse(packet, UserID):
             profileInfo.truncate(0)
             for x in range(0,len(profInfo)):
                 if(x == len(profInfo)-1):
+                    profileInfo.seek(0)
                     profileInfo.write(profInfo[x])
+                    profileInfo.close()
+                    return argument;
                 elif(x == 0):
                     profileInfo.seek(0)
                     profileInfo.write(profInfo[x] + "\n")
+                    profileInfo.close()
+                    return argument;
                 else:
+                    profileInfo.seek(0)
                     profileInfo.write(profInfo[x] + "\n")
-                    profileInfo.close();
+                    profileInfo.close()
+                    return argument;
                     #print("We done")
     elif(function == "get"):
         #print("Start Here")
@@ -79,14 +86,33 @@ def postAuthParse(packet, UserID):
             #print(UserID)
             splitProfInfo = profInfo[x].split(",")
             if(splitProfInfo[0] == UserID):
-                print("Recieved Information")
-                print(splitProfInfo[3])
-
+                if(argument == "First Name"):
+                    return splitProfInfo[1]
+                elif(argument == "Last Name"):
+                    return splitProfInfo[2]
+                elif(argument == "Status"):
+                    return splitProfInfo[3]
+                else:
+                    return "Invalid Argument"
+    elif(function == "login"):
+        return "Allow";
+    elif(function == "getFirstName"):
+        for x in range(0,len(profInfo)):
+            splitInfo = profInfo[x].split(",")
+            if(splitInfo[0] == argument):
+                return splitInfo[1]
+    elif(function == "getStatus"):
+        for x in range(0,len(profInfo)):
+            splitInfo = profInfo[x].split(",")
+            if(splitInfo[0] == argument):
+                return splitInfo[3]
     else:
         print("Invalid function")
+        return "Invalid"
 
 
 def createID(packet):
+    print("Creating ID")
     auth = open("auth.txt", "r+")
     profileInfo = open("profileInfo.txt", "r+")
     currentAuths = auth.read();
@@ -106,35 +132,36 @@ def createID(packet):
     pswd = splitPacket[3][0:pswdLength-1]
     if(currentAuths == ""):
         auth.write(userID + "," + pswd)
-        return userID
     else:
         auth.write("\n" + userID + "," + pswd)
-        return userID
     if(currentProfiles == ""):
         profileInfo.write(userID + "," + firstName + "," + lastName + "," + "relation")
+        return userID
     else:
         profileInfo.write("\n" + userID + "," + firstName + "," + lastName + "," + "relation")
+        return userID
 
     auth.close()
     profileInfo.close()
 
 def parse(TXTdata):
-    TXTdata = TXTdata[1:len(packet)]
+    TXTdata = TXTdata[1:len(TXTdata)]
 #   print(packet)
     keyWord = TXTdata.split(":")[0]
     if(keyWord == "auth"):
         TXTdata = TXTdata[len(keyWord) + 1 : len(TXTdata)]
         #print(len(keyWord))
         #print(len(packet))
-        auth(TXTdata)
+        return auth(TXTdata)
     elif(keyWord == "createID"):
-        createID(TXTdata)
+        return createID(TXTdata)
     else:
         print("Invalid Keyword")
 
 
 def recieveTXTPacket(data):
-    parse(data)
+    print(data);
+    return parse(data)
 
 def recieveIMGPacket(data, img):
     parse(data,img)
@@ -150,6 +177,6 @@ while(True):
 #inputpacket = input("Simulate an incoming packet ")
 #if(inputpacket[0] == "{"):
 #   print("Valid input")
-#    parse(inputpacket)
+#   parse(inputpacket)
 #else:
 #    print("Invalid input")
