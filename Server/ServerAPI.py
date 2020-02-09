@@ -69,9 +69,6 @@ def createID(package):
     currentAuths = auth.read();
     currentProfiles = profileInfo.read();
     data = currentAuths.replace("\n", " ").split(" ")
-    print("WHERE THE FUCK IS THIS SHIT GETTING FUCKED")
-    print(data)
-    print(len(data))
     if(data[0] ==''):
         numberUsers = 1;
     else:
@@ -79,12 +76,7 @@ def createID(package):
     userID = "00000" + str(numberUsers)
     while(len(userID) > 6):
         userID = userID[1:len(UserID)]
-    print("INFO BEGINNING")
-    print(userID)
-    print(data)
-    print(package)
     splitPackage = package.split(":")
-    print(splitPackage)
     firstName = splitPackage[1]
     lastName = splitPackage[2]
     pswdLength = len(splitPackage[3])
