@@ -42,6 +42,16 @@ def submit_picture(uid, pwd, vis, image):
     return data
 
 
+def analyze_picture(uid, pwd, image):
+    s = socket.socket()
+    s.connect(("149.125.138.215", 16505))
+    header = ("{auth:" + uid + ":" + pwd + ":" + "ANALYZE" + ":IMG}").encode("utf-8")
+    s.send(header + cv2.imencode('.jpg', image)[1].tostring())
+    data = s.recv(1024).decode("utf-8")
+    s.close()
+    return data
+
+
 def authenticate(uid, pwd):
     r = get_response("{auth:" + uid + ":" + pwd + ":login:none}")
     return r == "Allow"
