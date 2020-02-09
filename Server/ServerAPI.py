@@ -33,9 +33,12 @@ def auth(packet, img = None):
     #print(allPwds)
     for x in range(0, len(allIds)):
         #print(x)
+        print("Anyone home")
         if(inputUserID == allIds[x] and inputPassword == allPwds[x]):
+            print("We are here again")
             print("Authentification Complete")
             return postAuthParse(outPutPacket, inputUserID, img)
+            print("perhaps here")
             break
         else:
             print("Invalid userID and/or userPWD")
@@ -132,17 +135,22 @@ def postAuthParse(packet, UserID, img = None):
         print("No photo")
         return "None", False
     elif(function == "P" or function == "H"):
+        index = ""
         for x in range(1,100):
             location = "Imgs/" + UserID + "/" + str(x) + "vP.jpg"
             if(path.exists(location)):
+                print("Starting over")
                 continue
             location = "Imgs/" + UserID + "/" + str(x) + "vH.jpg"
             if(path.exists(location)):
+                print("Starting over")
                 continue
-            location = "Imgs/" + UserID + "/" + str(x) + "v" + function + ".jpg"
-            cv2.imwrite(location,img)
-            print(str(x))
-            return str(x)
+            index = x
+            break
+        location = "Imgs/" + UserID + "/" + str(index) + "v" + function + ".jpg"
+        cv2.imwrite(location,img)
+        print(str(index))
+        return str(index)
     else:
         print("Invalid function")
         return "Invalid", False
@@ -206,17 +214,17 @@ def recieveIMGPacket(data, img = None):
     return parse(data,img = img)
 
 #Code Starts Here
-net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
-net.start_listeners()
+#net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
+#net.start_listeners()
 
-while(True):
-    pass
+#while(True):
+#    pass
 
 
-#inputpacket = input("Simulate an incoming packet ")
-#if(inputpacket[0] == "{"):
-#   print("Valid input")
-#   print(inputpacket)
-#   parse(inputpacket)
-#else:
-#    print("Invalid input")
+inputpacket = input("Simulate an incoming packet ")
+if(inputpacket[0] == "{"):
+   print("Valid input")
+   print(inputpacket)
+   parse(inputpacket)
+else:
+    print("Invalid input")
