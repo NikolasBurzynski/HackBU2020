@@ -34,15 +34,19 @@ class ProfileWindow:
         self.rel_stat.setCurrentIndex(stalkR.status_text_to_index(self.info[2]))
         self.rel_stat.currentIndexChanged.connect(self.rel_stat_changed)
 
-        self.img_index = 0
+        self.img_index = 1
         self.next_img = QPushButton("Next Image")
         self.next_img.clicked.connect(self.get_next_image)
         self.prev_img = QPushButton("Previous Image")
         self.prev_img.clicked.connect(self.get_prev_image)
+        self.up_img = QPushButton("Upload")
+        self.up_img.clicked.connect(self.upload_new)
 
         self.image = QLabel()
         self.pixmap = None
-        self.set_image(stalkR.get_image(self.uid, self.pwd, self.uid, self.img_index)[1])
+        ir = stalkR.get_image(self.uid, self.pwd, self.uid, self.img_index)
+        if ir[0]:
+            self.set_image(ir[1])
 
         self.grid.addWidget(self.title_label, 0, 0)
         self.grid.addWidget(QLabel("(" + self.uid + ")"), 1, 0)
@@ -52,7 +56,8 @@ class ProfileWindow:
 
         self.grid.addWidget(self.prev_img, 0, 2)
         self.grid.addWidget(self.next_img, 0, 3)
-        self.grid.addWidget(self.image, 1, 2, 2, 2)
+        self.grid.addWidget(self.up_img, 0, 4)
+        self.grid.addWidget(self.image, 1, 2, 2, 3)
 
     def set_image(self, img):
         resized = imutils.scale_and_pad(img)
@@ -79,3 +84,8 @@ class ProfileWindow:
 
     def rel_stat_changed(self):
         stalkR.set_status(self.uid, self.pwd, self.rel_stat.currentText())
+
+    def upload_new(self):
+        name = QFileDialog.getOpenFileName()[0]
+        if name[-3:len(name)] == "jpg":
+            stalkR.submit_picture(self.uid, self.pwd, True, cv2.imread(name))
