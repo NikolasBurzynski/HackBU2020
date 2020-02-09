@@ -1,7 +1,7 @@
 import ServerSockets
 import cv2
 import os.path
-#import add_image
+import add_image
 from os import path
 
 
@@ -29,7 +29,7 @@ def auth(packet, img = None):
     for users in data:
         allIds.append(users.split(",")[0])
         allPwds.append(users.split(",")[1])
-    #print(allIds)
+    print(allIds)
     #print(allPwds)
     for x in range(0, len(allIds)):
         #print(x)
@@ -148,9 +148,23 @@ def postAuthParse(packet, UserID, img = None):
             index = x
             break
         location = "Imgs/" + UserID + "/" + str(index) + "v" + function + ".jpg"
+        pass
+        pass
+        pass
         cv2.imwrite(location,img)
+        pass
+        pass
+        pass
         print(str(index))
+        pass
+        pass
+        pass
         return str(index)
+
+    elif(function == "ANALYZE"):
+        location = "Imgs/Analyze/analyzePic.jpg"
+        cv2.imWrite(location, img)
+
     else:
         print("Invalid function")
         return "Invalid", False
@@ -214,17 +228,17 @@ def recieveIMGPacket(data, img = None):
     return parse(data,img = img)
 
 #Code Starts Here
-#net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
-#net.start_listeners()
+net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
+net.start_listeners()
 
-#while(True):
-#    pass
+while(True):
+    pass
 
 
-inputpacket = input("Simulate an incoming packet ")
-if(inputpacket[0] == "{"):
-   print("Valid input")
-   print(inputpacket)
-   parse(inputpacket)
-else:
-    print("Invalid input")
+#inputpacket = input("Simulate an incoming packet ")
+#if(inputpacket[0] == "{"):
+#   print("Valid input")
+#   print(inputpacket)
+#   parse(inputpacket)
+#else:
+#    print("Invalid input")
