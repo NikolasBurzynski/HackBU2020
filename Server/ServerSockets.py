@@ -25,10 +25,6 @@ class SocketHandler:
             
             data = cs.recv(5000000)
             
-            data.decode("utf-8")
-            self.on_data(data)
-            
-            '''
             header = ""
             str_data = ""
             
@@ -45,6 +41,6 @@ class SocketHandler:
             else:
                 str_data = data.decode("utf-8")
                 cs.send(self.on_data(str_data).encode("utf-8"))
-            '''
+            
             cs.close()
     

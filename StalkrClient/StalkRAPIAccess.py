@@ -6,7 +6,7 @@ def get_response(to_send):
     s = socket.socket()
     #s.connect(("149.125.138.215", 16505))
     s.connect(("127.0.0.1", 16505))
-    s.send(to_send)
+    s.send(to_send.encode("utf-8"))
     data = s.recv(1024)
     s.close()
     return data.decode("utf-8")
