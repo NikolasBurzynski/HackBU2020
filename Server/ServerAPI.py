@@ -1,14 +1,9 @@
 import ServerSockets
-import cv2
-import os.path
-import add_image
-from os import path
-
 
 #def didPass():
 #    return "Allow"
 
-def auth(packet, img = None):
+def auth(packet):
     #print(packet)
     outPutPacket = packet
     packetLength = len(outPutPacket)
@@ -34,14 +29,14 @@ def auth(packet, img = None):
         #print(x)
         if(inputUserID == allIds[x] and inputPassword == allPwds[x]):
             print("Authentification Complete")
-            return postAuthParse(outPutPacket, inputUserID, img)
+            return postAuthParse(outPutPacket, inputUserID)
             break
         else:
             print("Invalid userID and/or userPWD")
-            return "Deny", False
+            return "Deny"
 
 
-def postAuthParse(packet, UserID, img = None):
+def postAuthParse(packet, UserID):
     #print(packet)
     splitPacket = packet.split(":")
     function = splitPacket[0]
@@ -71,17 +66,17 @@ def postAuthParse(packet, UserID, img = None):
                     profileInfo.seek(0)
                     profileInfo.write(profInfo[x])
                     profileInfo.close()
-                    return argument, False
+                    return argument;
                 elif(x == 0):
                     profileInfo.seek(0)
                     profileInfo.write(profInfo[x] + "\n")
                     profileInfo.close()
-                    return argument, False
+                    return argument;
                 else:
                     profileInfo.seek(0)
                     profileInfo.write(profInfo[x] + "\n")
                     profileInfo.close()
-                    return argument, False
+                    return argument;
                     #print("We done")
     elif(function == "get"):
         #print("Start Here")
@@ -92,59 +87,28 @@ def postAuthParse(packet, UserID, img = None):
             splitProfInfo = profInfo[x].split(",")
             if(splitProfInfo[0] == UserID):
                 if(argument == "First Name"):
-                    return splitProfInfo[1], False
+                    return splitProfInfo[1]
                 elif(argument == "Last Name"):
-                    return splitProfInfo[2], False
+                    return splitProfInfo[2]
                 elif(argument == "Status"):
-                    return splitProfInfo[3], False
+                    return splitProfInfo[3]
                 else:
-                    return "Invalid Argument", False
+                    return "Invalid Argument"
     elif(function == "login"):
-        return "Allow", False
+        return "Allow";
     elif(function == "getFirstName"):
         for x in range(0,len(profInfo)):
             splitInfo = profInfo[x].split(",")
             if(splitInfo[0] == argument):
-                return splitInfo[1], False
+                return splitInfo[1]
     elif(function == "getStatus"):
         for x in range(0,len(profInfo)):
             splitInfo = profInfo[x].split(",")
             if(splitInfo[0] == argument):
-                return splitInfo[3], False
-    elif(function[0] == "i"):
-        #photo mode activated
-        functionLength = len(function);
-        index = function[1:len(function)];
-        targetId = UserID;
-        directory = "Imgs/" + targetId + "/" + index + "vP.jpg"
-        if(path.exists(directory)):
-            img = cv2.imread(directory)
-            print("basic")
-            return ServerSockets.picture_to_data(img), True
-
-        directory = "Imgs/" + targetId + "/" + index + "vH.jpg"
-        if(path.exists(directory) and targetId == UserID):
-            print("Private")
-            img = cv2.imread(directory)
-            return ServerSockets.picture_to_data(img), True
-
-        print("No photo")
-        return "None", False
-    elif(function == "P" or function == "H"):
-        for x in range(1,100):
-            location = "Imgs/" + UserID + "/" + x + "vP.jpg"
-            if(path.exists(location)):
-                continue
-            location = "Imgs/" + UserID + "/" + x + "vH.jpg"
-            if(path.exists(location)):
-                continue
-            location = "Imgs/" + UserID + "/" + x + "v" + function + ".jpg"
-            img.imwrite(location)
-            add_image.add_img(location)
-            return str(x);
+                return splitInfo[3]
     else:
         print("Invalid function")
-        return "Invalid", False
+        return "Invalid"
 
 
 def createID(packet):
@@ -161,8 +125,6 @@ def createID(packet):
     userID = "00000" + str(numberUsers)
     while(len(userID) > 6):
         userID = userID[1:len(UserID)]
-    path = "Imgs/" + userID;
-    os.mkdir(path);
     splitPacket = packet.split(":")
     firstName = splitPacket[1]
     lastName = splitPacket[2]
@@ -174,15 +136,15 @@ def createID(packet):
         auth.write("\n" + userID + "," + pswd)
     if(currentProfiles == ""):
         profileInfo.write(userID + "," + firstName + "," + lastName + "," + "relation")
-        return userID, False
+        return userID
     else:
         profileInfo.write("\n" + userID + "," + firstName + "," + lastName + "," + "relation")
-        return userID, False
+        return userID
 
     auth.close()
     profileInfo.close()
 
-def parse(TXTdata, img = None):
+def parse(TXTdata):
     TXTdata = TXTdata[1:len(TXTdata)]
 #   print(packet)
     keyWord = TXTdata.split(":")[0]
@@ -190,7 +152,7 @@ def parse(TXTdata, img = None):
         TXTdata = TXTdata[len(keyWord) + 1 : len(TXTdata)]
         #print(len(keyWord))
         #print(len(packet))
-        return auth(TXTdata, img)
+        return auth(TXTdata)
     elif(keyWord == "createID"):
         return createID(TXTdata)
     else:
@@ -202,7 +164,7 @@ def recieveTXTPacket(data):
     return parse(data)
 
 def recieveIMGPacket(data, img):
-    parse(data,img = img)
+    parse(data,img)
 
 #Code Starts Here
 net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
