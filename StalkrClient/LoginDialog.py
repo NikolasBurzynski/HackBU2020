@@ -1,13 +1,20 @@
 from PyQt5.QtWidgets import *
 import StalkRAPIAccess as stalkR
+import WindowManager
 
 
-class LoginDialog():
-    def __init__(self):
+class LoginDialog:
+    def __init__(self, wm):
+
+        self.wm = wm
 
         self.window = QWidget()
         self.window.setWindowTitle("StalkR Login")
         self.window.setGeometry(10, 10, 300, 50)
+        qr = self.window.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.window.move(qr.topLeft())
 
         self.grid = QGridLayout()
         self.window.setLayout(self.grid)
@@ -24,6 +31,7 @@ class LoginDialog():
         self.submit.clicked.connect(self.login_pressed)
 
         self.create = QPushButton("Create")
+        self.create.clicked.connect(self.create_pressed)
 
         self.grid.addWidget(QLabel("User ID"), 0, 0)
         self.grid.addWidget(self.uid_edit, 0, 1)
@@ -49,4 +57,9 @@ class LoginDialog():
         if not stalkR.authenticate(self.uid_edit.text(), self.pwd_edit.text()):
             self.set_msg("Incorrect UID or password")
         else:
-            self.set_msg("Processing...")
+            self.set_msg("Opening...")
+            self.window.close()
+
+    def create_pressed(self):
+        self.wm.make_create_account()
+        self.window.close()

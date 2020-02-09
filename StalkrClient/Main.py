@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import *
-import LoginDialog
+import WindowManager
+
+wm = WindowManager.WindowManager()
 
 app = QApplication([])
 
-login = LoginDialog.LoginDialog()
-
-login.show()
+wm.make_login()
 
 app.exec_()
+
