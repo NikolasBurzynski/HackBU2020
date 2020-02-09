@@ -1,7 +1,7 @@
 import cv2
 
-
 def scale_and_pad(img, scale=480):
+    """Methods provided by public domain, tweaked by me for use here"""
     original_dims = img.shape[:2]
     ratio = float(scale) / max(original_dims)
     resized_dims = tuple([int(x * ratio) for x in original_dims])
