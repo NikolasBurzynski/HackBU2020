@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import StalkRAPIAccess as stalkR
+import imutils
+import cv2
 import WindowManager
 
 
@@ -31,10 +33,23 @@ class ProfileWindow:
         self.rel_stat.addItems(["Single", "Taken", "Not Looking"])
         self.rel_stat.setCurrentIndex(stalkR.status_text_to_index(self.info[2]))
 
+        img = cv2.imread('car.jpg')
+
+        resized = imutils.scale_and_pad(img)
+
+        cv2.imwrite("fitted.jpg", resized)
+
+        self.image = QLabel()
+        self.pixmap = QPixmap("fitted.jpg")
+        self.image.setPixmap(self.pixmap)
+        self.image.resize(20, 20)
+
         self.grid.addWidget(self.title_label, 0, 0)
 
         self.grid.addWidget(QLabel("My Status"), 1, 0)
         self.grid.addWidget(self.rel_stat, 1, 1)
+
+        self.grid.addWidget(self.image, 0, 2, 2, 1)
 
     def show(self):
         self.window.show()
