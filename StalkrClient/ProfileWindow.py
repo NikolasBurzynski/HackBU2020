@@ -42,7 +42,7 @@ class ProfileWindow:
         self.up_img = QPushButton("Upload")
         self.up_img.clicked.connect(self.upload_new)
 
-        self.analyze = QPushButton("Analyze")
+        self.analyze = QPushButton("Analyze New Image")
         self.analyze.clicked.connect(self.open_analyze)
 
         self.image = QLabel()
@@ -56,6 +56,7 @@ class ProfileWindow:
 
         self.grid.addWidget(QLabel("My Status"), 2, 0)
         self.grid.addWidget(self.rel_stat, 2, 1)
+        self.grid.addWidget(self.analyze, 3, 0, 1, 2)
 
         self.grid.addWidget(self.prev_img, 0, 2)
         self.grid.addWidget(self.next_img, 0, 3)
@@ -68,7 +69,7 @@ class ProfileWindow:
         self.image = QLabel()
         self.pixmap = QPixmap("current.jpg")
         self.image.setPixmap(self.pixmap)
-        self.grid.addWidget(self.image, 1, 2, 2, 2)
+        self.grid.addWidget(self.image, 1, 2, 2, 3)
 
     def show(self):
         self.window.show()
