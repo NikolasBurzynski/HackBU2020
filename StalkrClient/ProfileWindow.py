@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import StalkRAPIAccess as stalkR
-import imutils
+import sr_imutils
 import cv2
 import WindowManager
 
@@ -63,7 +63,7 @@ class ProfileWindow:
         self.grid.addWidget(self.image, 1, 2, 2, 3)
 
     def set_image(self, img):
-        resized = imutils.scale_and_pad(img)
+        resized = sr_imutils.scale_and_pad(img)
         cv2.imwrite("current.jpg", resized)
         self.image = QLabel()
         self.pixmap = QPixmap("current.jpg")
