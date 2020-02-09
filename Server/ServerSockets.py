@@ -38,8 +38,6 @@ class SocketHandler:
                 data = np.fromstring(data, np.uint8)
                 image = cv2.imdecode(data, cv2.IMREAD_COLOR)
                 r = self.on_image(header, image)
-                print(type(r))
-                print(r)
                 cs.send(self.on_image(header, image).encode("utf-8"))
             else:
                 str_data = data.decode("utf-8")
