@@ -40,7 +40,11 @@ class SocketHandler:
                 cs.send(self.on_image(header.decode("utf-8", image)))
             else:
                 str_data = data.decode("utf-8")
-                cs.send(self.on_data(str_data).encode("utf-8"))
+                r = self.on_data(str_data)
+                if not r[1]:
+                    cs.send(r[0].encode("utf-8"))
+                else:
+                    cs.send(r[0])
             
             cs.close()
             
