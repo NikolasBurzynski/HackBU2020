@@ -1,2 +1,4 @@
-{'UserID':000001,'FirstName':Dan,'LastName':Tierney,'Status':relation}
-{'UserID':000002,'FirstName':Dan,'LastName':Tierney,'Status':relation}
+000001,Niko,Bski,single
+000002,Help,Me,single
+000003,John,Smith,taken
+000004,John,Kennedy,single
