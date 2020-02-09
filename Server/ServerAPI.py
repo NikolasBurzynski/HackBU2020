@@ -1,14 +1,19 @@
 
 def auth(package):
     print(package);
+    outPutPackage = package;
+    packageLength = len(outPutPackage);
     file = open("auth.txt", "r+");
     data = file.read().replace("\n", " ").split(" ");
     print(data);
     inputUserID = package.split(":")[0];
-    inputPassword = package.split(":")[1];
-    inputPassword = inputPassword[0:len(inputPassword)-1];
+    package = package.split(":")[1][0:len(package)];
+    print(package);
+    inputPassword = package.split(":")[0];
+    inputPassword = inputPassword[0:len(inputPassword)];
     print(inputUserID);
     print(inputPassword);
+    outPutPackage = outPutPackage[len(inputPassword) + len(inputUserID) + 2:packageLength]
     allIds = [];
     allPwds = [];
     for users in data:
@@ -17,18 +22,18 @@ def auth(package):
     print(allIds);
     print(allPwds);
     for x in range(0, len(allIds)+1):
-        print(x);
+        #print(x);
         if(inputUserID == allIds[x] and inputPassword == allPwds[x]):
             print("Authentification Complete");
+            postAuthParse(outPutPackage);
             return True;
 
-    return False;
+    print("Invalid userID and/or userPWD");
 
-def get(package):
-    print("Still needs to be written");
 
-def _set(package):
-    print("Still needs to be written");
+def postAuthParse(package):
+    print(package);
+
 
 
 def parse(package):
@@ -40,10 +45,8 @@ def parse(package):
         print(len(keyWord));
         print(len(package));
         auth(package);
-    elif(keyWord == "get"):
+    elif(keyWord == "create"):
         get(package);
-    elif(keyWord == "set"):
-        _set(package);
     else:
         print("Invalid Keyword");
 
