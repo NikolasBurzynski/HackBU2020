@@ -32,6 +32,7 @@ class ProfileWindow:
         self.rel_stat = QComboBox()
         self.rel_stat.addItems(["Single", "Taken", "Not Looking"])
         self.rel_stat.setCurrentIndex(stalkR.status_text_to_index(self.info[2]))
+        self.rel_stat.currentIndexChanged.connect(self.rel_stat_changed)
 
         self.img_index = 0
         self.next_img = QPushButton("Next Image")
@@ -44,9 +45,10 @@ class ProfileWindow:
         self.set_image(stalkR.get_image(self.uid, self.pwd, self.uid, self.img_index)[1])
 
         self.grid.addWidget(self.title_label, 0, 0)
+        self.grid.addWidget(QLabel("(" + self.uid + ")"), 1, 0)
 
-        self.grid.addWidget(QLabel("My Status"), 1, 0)
-        self.grid.addWidget(self.rel_stat, 1, 1)
+        self.grid.addWidget(QLabel("My Status"), 2, 0)
+        self.grid.addWidget(self.rel_stat, 2, 1)
 
         self.grid.addWidget(self.prev_img, 0, 2)
         self.grid.addWidget(self.next_img, 0, 3)
@@ -74,3 +76,6 @@ class ProfileWindow:
         if response[0]:
             self.img_index -= 1
             self.set_image(response[1])
+
+    def rel_stat_changed(self):
+        stalkR.set_status(self.uid, self.pwd, self.rel_stat.currentText())

@@ -4,8 +4,8 @@ import cv2
 
 def get_response(to_send):
     s = socket.socket()
-    #s.connect(("149.125.138.215", 16505))
-    s.connect(("127.0.0.1", 16505))
+    s.connect(("149.125.138.215", 16505))
+    #s.connect(("127.0.0.1", 16505))
     s.send(to_send.encode("utf-8"))
     data = s.recv(1024)
     s.close()
@@ -22,7 +22,8 @@ def submit_picture(uid, pwd, image):
 
 
 def authenticate(uid, pwd):
-    return True
+    r = get_response("{auth:" + uid + ":" + pwd + ":login:none}")
+    return r == "Allow"
 
 
 def create_account(pwd, first_name, last_name):
@@ -31,14 +32,7 @@ def create_account(pwd, first_name, last_name):
 
 
 def get_info(uid, pwd, target_uid, var_name):
-    if var_name == "first_name":
-        return "Patricia"
-    elif var_name == "last_name":
-        return "Madmen"
-    elif var_name == "rel_stat":
-        return "Taken"
-    else:
-        return ""
+    return get_response("{auth:" + uid + ":" + pwd + ":get:" + var_name + "}")
 
 
 def get_image(uid, pwd, target_uid, index):
@@ -49,11 +43,16 @@ def get_image(uid, pwd, target_uid, index):
 
 
 def get_complete_info(uid, pwd):
-    first = get_info(uid, pwd, uid, "first_name")
-    last = get_info(uid, pwd, uid, "last_name")
-    status = get_info(uid, pwd, uid, "rel_stat")
+    first = get_info(uid, pwd, uid, "First Name")
+    last = get_info(uid, pwd, uid, "Last Name")
+    status = get_info(uid, pwd, uid, "Status")
 
     return last, first, status
+
+
+def set_status(uid, pwd, new):
+    r = get_response("{auth:" + uid + ":" + pwd + ":set:" + new + "}")
+    return r == new
 
 
 def status_text_to_index(status):
