@@ -43,4 +43,7 @@ class SocketHandler:
                 cs.send(self.on_data(str_data).encode("utf-8"))
             
             cs.close()
+            
+def picture_to_data(img):
+    return b"IMG:" + cv2.imencode('.jpg', img)[1].tostring()
     
