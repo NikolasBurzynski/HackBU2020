@@ -6,8 +6,10 @@ import cv2
 import StalkRAPIAccess as stalkR
 
 class AnalyzeWindow:
-    def __init__(self, wm):
+    def __init__(self, wm, uid, pwd):
         self.wm = wm
+        self.uid = uid
+        self.pwd = pwd
         self.window = QWidget()
         self.window.setWindowTitle("StalkR Analyze")
         self.window.setGeometry(10, 10, 300, 50)
@@ -33,6 +35,9 @@ class AnalyzeWindow:
         self.grid.addWidget(self.title_label, 0, 0)
         self.grid.addWidget(self.submit_to_analyze, 0, 1)
 
+
+    def show(self):
+        self.window.show()
 
     def set_image(self, img):
         resized = sr_imutils.scale_and_pad(img)

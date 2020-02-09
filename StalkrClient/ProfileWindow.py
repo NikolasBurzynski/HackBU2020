@@ -31,7 +31,10 @@ class ProfileWindow:
 
         self.rel_stat = QComboBox()
         self.rel_stat.addItems(["Single", "Taken", "Not Looking"])
-        self.rel_stat.setCurrentIndex(stalkR.status_text_to_index(self.info[2]))
+        try:
+            self.rel_stat.setCurrentIndex(stalkR.status_text_to_index(self.info[2]))
+        except TypeError:
+            self.rel_stat.setCurrentIndex("Single")
         self.rel_stat.currentIndexChanged.connect(self.rel_stat_changed)
 
         self.img_index = 1
@@ -97,4 +100,4 @@ class ProfileWindow:
             self.img_index = index
 
     def open_analyze(self):
-        self.wm.make_analyze()
+        self.wm.make_analyze(self.uid, self.pwd)
