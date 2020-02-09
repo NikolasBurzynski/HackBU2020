@@ -53,6 +53,7 @@ image = cv2.imread(args["image"])
 image = imutils.resize(image, width=600)
 (h, w) = image.shape[:2]
 
+print(args["image"])
 # extract the person name from the image path
 name = args["image"].split(os.path.sep)[2]
 
