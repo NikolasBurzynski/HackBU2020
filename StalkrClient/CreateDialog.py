@@ -71,8 +71,10 @@ class CreateDialog:
                 if len(self.last_name.text()) != 0:
                     if len(self.pwd_entry.text()) != 0:
                         if self.pwd_entry.text() == self.pwd_confirm.text():
-                            if stalkR.create_account(self.pwd_entry.text(), self.first_name.text(), self.last_name.text()):
-                                pass  # Account is created, move on
+                            create_status = stalkR.create_account(self.pwd_entry.text(), self.first_name.text(), self.last_name.text())
+                            if create_status[0]:
+                                self.wm.make_my_profile(create_status[1], self.pwd_entry.text())
+                                self.window.close()
                             else:
                                 self.set_msg("Account rejected")
                         else:

@@ -1,6 +1,35 @@
 def authenticate(uid, pwd):
-    return uid == "TRUE"
+    return True
 
 
 def create_account(pwd, first_name, last_name):
-    return True
+    return True, "000000"
+
+
+def get_info(uid, pwd, target_uid, var_name):
+    if var_name == "first_name":
+        return "Patricia"
+    elif var_name == "last_name":
+        return "Madmen"
+    elif var_name == "rel_stat":
+        return "Taken"
+    else:
+        return ""
+
+
+def get_complete_info(uid, pwd):
+    first = get_info(uid, pwd, uid, "first_name")
+    last = get_info(uid, pwd, uid, "last_name")
+    status = get_info(uid, pwd, uid, "rel_stat")
+
+    return last, first, status
+
+
+def status_text_to_index(status):
+    status = status.lower()
+    if status == "single":
+        return 0
+    elif status == "taken":
+        return 1
+    elif status == "not looking":
+        return 2

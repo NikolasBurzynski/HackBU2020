@@ -58,6 +58,7 @@ class LoginDialog:
             self.set_msg("Incorrect UID or password")
         else:
             self.set_msg("Opening...")
+            self.wm.make_my_profile(self.uid_edit.text(), self.pwd_edit.text())
             self.window.close()
 
     def create_pressed(self):
