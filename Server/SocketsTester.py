@@ -4,7 +4,10 @@ def retrieve(data):
     print(data)
     return "GOT!!"
     
-net = ServerSockets.SocketHandler(retrieve)
+def ret_image(data, image):
+    pass
+    
+net = ServerSockets.SocketHandler(retrieve, ret_image)
 
 net.start_listeners()
 
