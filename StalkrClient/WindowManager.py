@@ -24,6 +24,6 @@ class WindowManager:
         self.my_profile = ProfileWindow.ProfileWindow(self, uid, pwd)
         self.my_profile.show()
 
-    def make_analyze(self):
-        self.analyze = AnalyzeWindow(self)
+    def make_analyze(self, uid, pwd):
+        self.analyze = AnalyzeWindow.AnalyzeWindow(self, uid, pwd)
         self.analyze.show()
