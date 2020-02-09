@@ -4,10 +4,12 @@ import cv2
 
 def get_response(to_send):
     s = socket.socket()
-    s.connect(("149.125.138.215", 16505))
+    #s.connect(("149.125.138.215", 16505))
+    s.connect(("127.0.0.1", 16505))
     s.send(to_send)
-    print(s.recv(1024))
+    data = s.recv(1024)
     s.close()
+    return data.decode("utf-8")
 
 
 def submit_picture(uid, pwd, image):
@@ -24,7 +26,8 @@ def authenticate(uid, pwd):
 
 
 def create_account(pwd, first_name, last_name):
-    return True, "000000"
+    r = get_response("{createID:" + first_name + ":" + last_name + ":" + pwd + "}")
+    return True, r
 
 
 def get_info(uid, pwd, target_uid, var_name):
