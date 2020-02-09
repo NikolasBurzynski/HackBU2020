@@ -1,23 +1,23 @@
+import ServerSockets
+
 def didPass():
     return True
 
-
-
-def auth(package):
-    #print(package)
-    outPutPackage = package
-    packageLength = len(outPutPackage)
+def auth(packet):
+    #print(packet)
+    outPutPacket = packet
+    packetLength = len(outPutPacket)
     file = open("auth.txt", "r+")
     data = file.read().replace("\n", " ").split(" ")
     file.close()
     #print(data)
-    splitPackage = package.split(":")
-    #print(splitPackage)
-    inputUserID = splitPackage[0]
-    inputPassword = splitPackage[1]
+    splitPacket = packet.split(":")
+    #print(splitpacket)
+    inputUserID = splitPacket[0]
+    inputPassword = splitPacket[1]
     #print(inputUserID)
     #print(inputPassword)
-    outPutPackage = splitPackage[2] + ":" + splitPackage[3]
+    outPutPacket = splitPacket[2] + ":" + splitPacket[3]
     allIds = []
     allPwds = []
     for users in data:
@@ -30,18 +30,18 @@ def auth(package):
         if(inputUserID == allIds[x] and inputPassword == allPwds[x]):
             print("Authentification Complete")
             didPass()
-            postAuthParse(outPutPackage, inputUserID)
+            postAuthParse(outPutPacket, inputUserID)
             break
         else:
             print("Invalid userID and/or userPWD")
 
 
-def postAuthParse(package, UserID):
-    #print(package)
-    splitPackage = package.split(":")
-    function = splitPackage[0]
-    argumentLength = len(splitPackage[1])
-    argument = splitPackage[1][0:argumentLength-1]
+def postAuthParse(packet, UserID):
+    #print(packet)
+    splitPacket = packet.split(":")
+    function = splitPacket[0]
+    argumentLength = len(splitPacket[1])
+    argument = splitPacket[1][0:argumentLength-1]
     #print("USER ID")
     #print(UserID)
     profileInfo = open("profileInfo.txt", "r+")
@@ -86,7 +86,7 @@ def postAuthParse(package, UserID):
         print("Invalid function")
 
 
-def createID(package):
+def createID(packet):
     auth = open("auth.txt", "r+")
     profileInfo = open("profileInfo.txt", "r+")
     currentAuths = auth.read();
@@ -99,15 +99,17 @@ def createID(package):
     userID = "00000" + str(numberUsers)
     while(len(userID) > 6):
         userID = userID[1:len(UserID)]
-    splitPackage = package.split(":")
-    firstName = splitPackage[1]
-    lastName = splitPackage[2]
-    pswdLength = len(splitPackage[3])
-    pswd = splitPackage[3][0:pswdLength-1]
+    splitPacket = packet.split(":")
+    firstName = splitPacket[1]
+    lastName = splitPacket[2]
+    pswdLength = len(splitPacket[3])
+    pswd = splitPacket[3][0:pswdLength-1]
     if(currentAuths == ""):
         auth.write(userID + "," + pswd)
+        return userID
     else:
         auth.write("\n" + userID + "," + pswd)
+        return userID
     if(currentProfiles == ""):
         profileInfo.write(userID + "," + firstName + "," + lastName + "," + "relation")
     else:
@@ -116,29 +118,38 @@ def createID(package):
     auth.close()
     profileInfo.close()
 
-
-
-
-
-def parse(package):
-    package = package[1:len(package)]
-#   print(package)
-    keyWord = package.split(":")[0]
+def parse(TXTdata):
+    TXTdata = TXTdata[1:len(packet)]
+#   print(packet)
+    keyWord = TXTdata.split(":")[0]
     if(keyWord == "auth"):
-        package = package[len(keyWord) + 1 : len(package)]
+        TXTdata = TXTdata[len(keyWord) + 1 : len(TXTdata)]
         #print(len(keyWord))
-        #print(len(package))
-        auth(package)
+        #print(len(packet))
+        auth(TXTdata)
     elif(keyWord == "createID"):
-        createID(package)
+        createID(TXTdata)
     else:
         print("Invalid Keyword")
 
-#Code Starts Here
 
-inputPackage = input("Simulate an incoming package ")
-if(inputPackage[0] == "{"):
+def recieveTXTPacket(data):
+    parse(data)
+
+def recieveIMGPacket(data, img):
+    parse(data,img)
+
+#Code Starts Here
+net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
+net.start_listeners()
+
+while(True):
+    pass
+
+
+#inputpacket = input("Simulate an incoming packet ")
+#if(inputpacket[0] == "{"):
 #   print("Valid input")
-    parse(inputPackage)
-else:
-    print("Invalid input")
+#    parse(inputpacket)
+#else:
+#    print("Invalid input")
