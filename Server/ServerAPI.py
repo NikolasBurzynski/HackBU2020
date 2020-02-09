@@ -132,16 +132,17 @@ def postAuthParse(packet, UserID, img = None):
         return "None", False
     elif(function == "P" or function == "H"):
         for x in range(1,100):
-            location = "Imgs/" + UserID + "/" + x + "vP.jpg"
+            location = "Imgs/" + UserID + "/" + str(x) + "vP.jpg"
             if(path.exists(location)):
                 continue
-            location = "Imgs/" + UserID + "/" + x + "vH.jpg"
+            location = "Imgs/" + UserID + "/" + str(x) + "vH.jpg"
             if(path.exists(location)):
                 continue
-            location = "Imgs/" + UserID + "/" + x + "v" + function + ".jpg"
-            img.imwrite(location)
+            location = "Imgs/" + UserID + "/" + str(x) + "v" + function + ".jpg"
+            cv2.imwrite(location,img)
             add_image.add_img(location)
-            return str(x);
+            print(str(x))
+            return str(x)
     else:
         print("Invalid function")
         return "Invalid", False
@@ -173,10 +174,10 @@ def createID(packet):
     else:
         auth.write("\n" + userID + "," + pswd)
     if(currentProfiles == ""):
-        profileInfo.write(userID + "," + firstName + "," + lastName + "," + "relation")
+        profileInfo.write(userID + "," + firstName + "," + lastName + "," + "Single")
         return userID, False
     else:
-        profileInfo.write("\n" + userID + "," + firstName + "," + lastName + "," + "relation")
+        profileInfo.write("\n" + userID + "," + firstName + "," + lastName + "," + "Single")
         return userID, False
 
     auth.close()
@@ -198,11 +199,11 @@ def parse(TXTdata, img = None):
 
 
 def recieveTXTPacket(data):
-    print(data);
+    print(data)
     return parse(data)
 
 def recieveIMGPacket(data, img):
-    parse(data,img = img)
+    return parse(data,img = img)
 
 #Code Starts Here
 net = ServerSockets.SocketHandler(recieveTXTPacket,recieveIMGPacket)
