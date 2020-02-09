@@ -37,8 +37,9 @@ def submit_picture(uid, pwd, vis, image):
         vis = "H"
     header = ("{auth:" + uid + ":" + pwd + ":" + vis + ":IMG}").encode("utf-8")
     s.send(header + cv2.imencode('.jpg', image)[1].tostring())
-    s.recv(1024)
+    data = s.recv(1024).decode("utf-8")
     s.close()
+    return data
 
 
 def authenticate(uid, pwd):

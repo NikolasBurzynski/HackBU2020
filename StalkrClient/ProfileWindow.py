@@ -42,6 +42,9 @@ class ProfileWindow:
         self.up_img = QPushButton("Upload")
         self.up_img.clicked.connect(self.upload_new)
 
+        self.analyze = QPushButton("Analyze")
+        self.analyze.clicked.connect(self.open_analyze)
+
         self.image = QLabel()
         self.pixmap = None
         ir = stalkR.get_image(self.uid, self.pwd, self.uid, self.img_index)
@@ -88,4 +91,9 @@ class ProfileWindow:
     def upload_new(self):
         name = QFileDialog.getOpenFileName()[0]
         if name[-3:len(name)] == "jpg":
-            stalkR.submit_picture(self.uid, self.pwd, True, cv2.imread(name))
+            index = int(stalkR.submit_picture(self.uid, self.pwd, True, cv2.imread(name)))
+            self.set_image(stalkR.get_image(self.uid, self.pwd, self.uid, index)[1])
+            self.img_index = index
+
+    def open_analyze(self):
+        self.wm.make_analyze()

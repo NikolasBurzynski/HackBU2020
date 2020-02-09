@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 import LoginDialog
 import CreateDialog
 import ProfileWindow
+import AnalyzeWindow
 
 
 class WindowManager:
@@ -22,3 +23,7 @@ class WindowManager:
     def make_my_profile(self, uid, pwd):
         self.my_profile = ProfileWindow.ProfileWindow(self, uid, pwd)
         self.my_profile.show()
+
+    def make_analyze(self):
+        self.analyze = AnalyzeWindow(self)
+        self.analyze.show()
