@@ -1,4 +1,0 @@
-000001,Niko,Bski,single
-000002,Help,Me,single
-000003,John,Smith,taken
-000004,John,Kennedy,single

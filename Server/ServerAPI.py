@@ -106,8 +106,10 @@ def createID(packet):
     pswd = splitPacket[3][0:pswdLength-1]
     if(currentAuths == ""):
         auth.write(userID + "," + pswd)
+        return userID
     else:
         auth.write("\n" + userID + "," + pswd)
+        return userID
     if(currentProfiles == ""):
         profileInfo.write(userID + "," + firstName + "," + lastName + "," + "relation")
     else:
