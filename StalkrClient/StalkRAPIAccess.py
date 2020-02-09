@@ -1,5 +1,6 @@
 import socket
 import cv2
+import numpy as np
 
 
 def get_response(to_send):
@@ -12,12 +13,31 @@ def get_response(to_send):
     return data.decode("utf-8")
 
 
-def submit_picture(uid, pwd, image):
+def get_response_image(to_send):
     s = socket.socket()
-    s.connect(("127.0.0.1", 16505))
-    header = ("{auth:" + uid + ":" + pwd + ":IMG}").encode("utf-8")
+    s.connect(("149.125.138.215", 16505))
+    #s.connect(("127.0.0.1", 16505))
+    s.send(to_send.encode("utf-8"))
+    data = s.recv(5000000)
+    image = "none"
+    if len(data) >= 4 and data[0:4] == b"IMG:":
+        data = data[4:len(data)]
+        data = np.fromstring(data, np.uint8)
+        image = cv2.imdecode(data, cv2.IMREAD_COLOR)
+    s.close()
+    return image
+
+
+def submit_picture(uid, pwd, vis, image):
+    s = socket.socket()
+    s.connect(("149.125.138.215", 16505))
+    if vis:
+        vis = "P"
+    else:
+        vis = "H"
+    header = ("{auth:" + uid + ":" + pwd + ":" + vis + ":IMG}").encode("utf-8")
     s.send(header + cv2.imencode('.jpg', image)[1].tostring())
-    print(s.recv(1024))
+    s.recv(1024)
     s.close()
 
 
@@ -36,10 +56,12 @@ def get_info(uid, pwd, target_uid, var_name):
 
 
 def get_image(uid, pwd, target_uid, index):
-    if 0 <= index <= 3:
-        return True, cv2.imread(str(index) + ".jpg")
+    r = get_response_image("{auth:" + uid + ":" + pwd + ":i" + str(index) + ":" + target_uid + "}")
+    if r != "none":
+        print("got img")
+        return True, r
     else:
-        return False, None
+        return False, r
 
 
 def get_complete_info(uid, pwd):
