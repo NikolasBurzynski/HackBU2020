@@ -1,2 +1,1 @@
-000001,Scott,Hendee,taken
-000002,Joe,Babbitt,available
+{'UserID':000001,'FirstName':Dan,'LastName':Tierney,'Status':relation}

@@ -66,28 +66,37 @@ def postAuthParse(package, UserID):
 def createID(package):
     auth = open("auth.txt", "r+")
     profileInfo = open("profileInfo.txt", "r+")
-    data = auth.read().replace("\n", " ").split(" ")
-    numberUsers = len(data)
+    currentAuths = auth.read();
+    currentProfiles = profileInfo.read();
+    data = currentAuths.replace("\n", " ").split(" ")
+    print("WHERE THE FUCK IS THIS SHIT GETTING FUCKED")
+    print(data)
+    print(len(data))
+    if(data[0] ==''):
+        numberUsers = 1;
+    else:
+        numberUsers = len(data)+1
     userID = "00000" + str(numberUsers)
     while(len(userID) > 6):
         userID = userID[1:len(UserID)]
-#    print(userID)
-#    print(data)
-#    print(package)
+    print("INFO BEGINNING")
+    print(userID)
+    print(data)
+    print(package)
     splitPackage = package.split(":")
-#    print(splitPackage)
+    print(splitPackage)
     firstName = splitPackage[1]
     lastName = splitPackage[2]
     pswdLength = len(splitPackage[3])
     pswd = splitPackage[3][0:pswdLength-1]
-    if(auth.read() == ""):
+    if(currentAuths == ""):
         auth.write(userID + "," + pswd)
     else:
         auth.write("\n" + userID + "," + pswd)
-    if(profileInfo.read() == ""):
-        profileInfo.write(userID + "," + firstName + "," + lastName + "," + "This is where the relation status goes")
+    if(currentProfiles == ""):
+        profileInfo.write("{'UserID':" + userID + "," + "'FirstName':" +  firstName + "," + "'LastName':" + lastName + "," + "'Status':" + "relation" + "}")
     else:
-        profileInfo.write("\n" + userID + "," + firstName + "," + lastName + "," + "This is where the relation status goes")
+        profileInfo.write("\n" "{'UserID':" + userID + "," + "'FirstName':" +  firstName + "," + "'LastName':" + lastName + "," + "'Status':" + "relation" + "}")
 
     auth.close()
     profileInfo.close()
