@@ -1,3 +1,19 @@
+import socket
+import cv2
+
+
+def get_response(to_send):
+    s = socket.socket()
+    s.connect(("149.125.138.215", 16505))
+    s.send(to_send)
+    print(s.recv(1024))
+    s.close()
+
+
+def submit_picture(uid, pwd, image):
+    pass
+
+
 def authenticate(uid, pwd):
     return True
 
@@ -15,6 +31,13 @@ def get_info(uid, pwd, target_uid, var_name):
         return "Taken"
     else:
         return ""
+
+
+def get_image(uid, pwd, target_uid, index):
+    if 0 <= index <= 3:
+        return True, cv2.imread(str(index) + ".jpg")
+    else:
+        return False, None
 
 
 def get_complete_info(uid, pwd):

@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 import WindowManager
+import StalkRAPIAccess as StalkR
 
 wm = WindowManager.WindowManager()
 
