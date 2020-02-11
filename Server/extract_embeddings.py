@@ -54,8 +54,8 @@ image = imutils.resize(image, width=600)
 (h, w) = image.shape[:2]
 
 print(args["image"])
-# extract the person name from the image path
-name = args["image"].split(os.path.sep)[-1]
+# extract the person name from the image path (requires "/" separator)
+name = args["image"].split("/")[-2]
 
 # construct a blob from the image
 imageBlob = cv2.dnn.blobFromImage(
